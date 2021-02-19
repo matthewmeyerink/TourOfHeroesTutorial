@@ -58,6 +58,18 @@ export class HeroService {
     );
   }
 
+  /* DELETE method to delete a hero from the server */
+  deleteHero(hero: Hero | number): Observable<Hero> {
+    // Gather the id either from passed object or directly from id
+    const id = typeof hero === 'number' ? hero : hero.id;
+    const url = `${this.heroesUrl}/${id}`;
+
+    return this.http.delete<Hero>(url, this.httpOptions).pipe(
+      tap(_ => this.log(`deleted hero id=${id}`)),
+      catchError(this.handleError<Hero>('deleteHero'))
+    );
+  }
+
   /* Log a Hero Service Message through Message Service */
   private log(message: string): void {
     this.messageService.add(`HeroService: ${message}`);
